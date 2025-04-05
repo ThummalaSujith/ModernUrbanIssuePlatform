@@ -6,7 +6,8 @@ import {
   faCamera,
   faImages,
   faFolderOpen,
-  faTimes,
+  faTimes, faFolder,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 
@@ -98,7 +99,10 @@ const IssueForm = () => {
           // Show image preview if image exists
           <>
             <img src={formData.imagePreview} alt="Preview" />
-            <button onClick={removeImage}> <FontAwesomeIcon icon={faTimes} className="text-red-500" /></button>
+            <button onClick={removeImage}>
+              {" "}
+              <FontAwesomeIcon icon={faTimes} className="text-red-500" />
+            </button>
           </>
         ) : (
           // Show upload prompt if no image
@@ -125,15 +129,67 @@ const IssueForm = () => {
 
       {/* Upload options popups */}
 
-      {
+      {showOptions && (
+        <>
+          <div className="fixed inset-0 bg-black/40 z-50" />
 
-showOptions && (
-  <div 
-    className="fixed inset-0 bg-black/40 z-50"
-    onClick={() => setShowOptions(false)}
-  />
-)
-      }
+          <div className="fixed bottom-0 left-0 right-0 bg-white z-[51] h-70 rounded-2xl">
+            <div className="heading flex items-center justify-between p-4">
+              <h2 className="font-medium">Choose Upload Option </h2>
+              <FontAwesomeIcon
+                icon={faTimes}
+                className="text-gray-700"
+                onClick={() => setShowOptions(false)}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <div className=" flex items-center bg-gray-200  mx-3 rounded">
+                <FontAwesomeIcon
+                  icon={faCamera}
+                  className=" p-4 text-blue-400 "
+                  size="lg"
+                />
+
+                <p className="flex justify-center">Take Picture</p>
+                <FontAwesomeIcon
+                  icon={faChevronRight}
+                  className="text-gray-500 ml-auto px-4"
+                />
+              </div>
+
+
+              <div className=" flex items-center bg-gray-200  mx-3 rounded mt-3">
+                <FontAwesomeIcon
+                  icon={faImages}
+                  className=" p-4 text-green-400"
+                  size="lg"
+                />
+
+                <p className="flex justify-center ">Choose from Gallery</p>
+                <FontAwesomeIcon
+                  icon={faChevronRight}
+                  className="text-gray-500 ml-auto px-4"
+                />
+              </div>
+
+              <div className=" flex items-center bg-gray-200  mx-3 rounded mt-3">
+                <FontAwesomeIcon
+                  icon={faFolder}
+                  className=" p-4 text-yellow-400 "
+                  size="lg"
+                />
+
+                <p className="flex justify-center">Select from Files</p>
+                <FontAwesomeIcon
+                  icon={faChevronRight}
+                  className="text-gray-500 ml-auto px-4"
+                />
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Category Section */}
 
