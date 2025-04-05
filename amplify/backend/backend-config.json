@@ -1,0 +1,132 @@
+{
+  "api": {
+    "urbanissue": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "urbanissueFunction"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "auth": {
+    "urbanissueplatformb22d7001": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "verificationMechanisms": [
+          "PHONE_NUMBER"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "function": {
+    "urbanissueFunction": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "urbanissue"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "urbanissueSpecificFunction": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributeEnvMap": {
+            "Arn": "TABLE_ARN",
+            "Name": "TABLE_NAME"
+          },
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "storage",
+          "resourceName": "urbanissue"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "geo": {},
+  "parameters": {
+    "AMPLIFY_function_urbanissueFunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "urbanissueFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_urbanissueFunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "urbanissueFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_urbanissueSpecificFunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "urbanissueSpecificFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_urbanissueSpecificFunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "urbanissueSpecificFunction"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "urbanissue": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "urbanissueimages": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
+  }
+}
