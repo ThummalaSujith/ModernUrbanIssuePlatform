@@ -123,7 +123,7 @@ const IssueForm = () => {
         )}
       </div>
 
-      {/* Upload options popup */}
+      {/* Upload options popups */}
 
       {
 
