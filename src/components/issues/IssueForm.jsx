@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 
 const IssueForm = () => {
+  
   const [formData, setFormData] = useState({
     category: "",
     description: "",
@@ -19,6 +20,7 @@ const IssueForm = () => {
     imagePreview: null,
     location: null,
   });
+
   const [position, setPosition] = useState(null);
   const [locationError, setLocationError] = useState(null);
   const [showOptions, setShowOptions] = useState(false);

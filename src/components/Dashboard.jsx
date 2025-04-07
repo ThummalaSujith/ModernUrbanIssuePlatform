@@ -1,66 +1,176 @@
-// src/components/Dashboard.jsx
-import React, { useState, useEffect } from 'react';
-import { fetchIssues } from '../services/getissueService';
-import IssueMap from '../components/map/IssueMap';
-import IssueList from '../components/issues/IssueList';
-import './Dashboard.css';
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell as faBellRegular } from "@fortawesome/free-regular-svg-icons";
+import {
+  faComment,
+  faEllipsisH,
+  faHome,
+  faLightbulb,
+  faMapLocation,
+  faNavicon,
+  faPlus,
+  faRoad,
+  faTrashAlt,
+  faTree,
+  faUser,
+  faWater,
+} from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+import IssueCard from "./issues/IssueCard";
+
+import { getIssues } from '../redux/slices/issueSlice';
 
 export const Dashboard = () => {
-  const [issues, setIssues] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const loadIssues = async () => {
-      try {
-        const issuesData = await fetchIssues();
-        console.log('Issues in component:', issuesData);
-        setIssues(issuesData);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadIssues();
-  }, []);
-
-  if (loading) return <div className="loading">Loading issues...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
-
   return (
-    <div className="dashboard">
-      <h1>Urban Issues Dashboard</h1>
-      
-      <div className="dashboard-grid">
-        <div className="map-section">
-          <h2>Issues Map</h2>
-          <IssueMap issues={issues} />
+    <div>
+      <div className="header w-full h-16 bg-red-400 flex justify-between">
+        <div className="Logo_heading py-4 px-4">
+          <h1 className="text-2xl  font-bold font-mono">CityFix</h1>
         </div>
-        
-        <div className="stats-section">
-          <h2>Statistics</h2>
-          <div className="stats-cards">
-            <div className="stat-card">
-              <h3>Total Issues</h3>
-              <p>{issues.length}</p>
-            </div>
-            <div className="stat-card">
-              <h3>Open Issues</h3>
-              <p>{issues.filter(i => i.status === 'OPEN').length}</p>
-            </div>
-            <div className="stat-card">
-              <h3>Pending Issues</h3>
-              <p>{issues.filter(i => i.status === 'pending').length}</p>
-            </div>
+
+        <div className="">
+          <FontAwesomeIcon icon={faBellRegular} className="text-2xl p-5" />
+        </div>
+      </div>
+
+      <div className="content mt-6 px-4">
+        <h1 className="font-bold text-2xl font-mono">Welcome back, Sarah!</h1>
+        <p className="text-gray-700 font-mono text-[14px] py-1.5 ">
+          Help make our city better
+        </p>
+      </div>
+
+      <Link to="/report">
+        <div className="flex  justify-center mt-8 ">
+          <button className="issue-report h-15 w-95 rounded bg-blue  flex items-center justify-center gap-3 bg-red-400 ">
+            <FontAwesomeIcon icon={faPlus} className="text-white" />
+            <p className="font-mono text-white">Report New Issue</p>
+          </button>
+        </div>
+      </Link>
+
+      <div className="Common_Issues mt-8">
+        <h5 className="font-mono font-bold text-xl px-4">Common Issues</h5>
+
+        <div className="grid grid-cols-3 gap-4 p-4">
+          <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <FontAwesomeIcon icon={faRoad} className="text-black-400" />
+            <p className="mt-2 text-black-700 font-medium font-mono">Roads</p>
+          </div>
+
+          <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <FontAwesomeIcon icon={faLightbulb} className="text-yellow-400" />
+            <p className="mt-2 text-black-700 font-medium font-mono">
+              Lighting
+            </p>
+          </div>
+
+          <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <FontAwesomeIcon icon={faTrashAlt} className="text-red-400" />
+            <p className="mt-2 text-black-700 font-medium font-mono">Garbage</p>
+          </div>
+
+          <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <FontAwesomeIcon icon={faTree} className="text-green-400" />
+            <p className="mt-2 text-black-700 font-medium font-mono">Parks</p>
+          </div>
+
+          <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <FontAwesomeIcon icon={faWater} className="text-blue-400" />
+            <p className="mt-2 text-black-700 font-medium font-mono">Water</p>
+          </div>
+
+          <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <FontAwesomeIcon icon={faEllipsisH} className="text-black-400" />
+            <p className="mt-2 text-black-700 font-medium font-mono">More</p>
           </div>
         </div>
       </div>
-      
-      <div className="recent-issues">
-        <h2>Recent Issues</h2>
-        <IssueList issues={issues.slice(0, 5)} />
+
+      <div className="Recent_Reports px-4 mt-3">
+        <div className="flex justify-between">
+          <h2 className="font-mono font-bold text-xl ">Recent Reports</h2>
+
+          <p className="font-mono text-[13px] font-bold">View All</p>
+        </div>
+
+        {/* Recent_Report_cards */}
+
+        <div className="Recent_Reports_Card h-32 bg-gray-200 mt-2 rounded-[6px] py-4 px-4  ">
+          <div className="flex  justify-between">
+            <div className="Status_button w-[110px] bg-yellow-300 h-8 rounded-[6px] ">
+              <p className="flex items-center justify-center py-1.5 font-mono text-[13px] text-amber-700">
+                In Progress
+              </p>
+            </div>
+
+            <p className="text-[13px] font-mono flex">2h ago</p>
+          </div>
+
+          <p className="font-mono font-medium text-[14px] py-1 ">
+            Broken Street Light
+          </p>
+          <p className="font-mono text-[11px] text-gray-600 py-1">
+            {" "}
+            Main Street, near central park
+          </p>
+          <div className="flex gap-1.5 items-center py-1">
+            <FontAwesomeIcon icon={faComment} className="text-gray-600" />
+            <p className="font-mono text-[12px]">3 Updates</p>
+          </div>
+        </div>
+
+        <div className="Recent_Reports_Card h-32 bg-gray-200 mt-2 rounded-[6px] py-4 px-4  ">
+          <div className="flex  justify-between">
+            <div className="Status_button w-[110px] bg-green-300 h-8 rounded-[6px] ">
+              <p className="flex items-center justify-center py-1.5 font-mono text-[13px] text-green-900">
+                Resolved
+              </p>
+            </div>
+
+            <p className="text-[13px] font-mono flex">2h ago</p>
+          </div>
+
+          <p className="font-mono font-medium text-[14px] py-1 ">
+            Broken Street Light
+          </p>
+          <p className="font-mono text-[11px] text-gray-600 py-1">
+            {" "}
+            Main Street, near central park
+          </p>
+          <div className="flex gap-1.5 items-center py-1">
+            <FontAwesomeIcon icon={faComment} className="text-gray-600" />
+            <p className="font-mono text-[12px]">3 Updates</p>
+          </div>
+        </div>
+
+        <IssueCard/>
+
+        
+      </div>
+
+      <div className="fixed bottom-0 right-0 left-0 border-t shadow-sm border-gray-200 h-16 bg-white">
+        <div className="flex justify-around">
+          <div className="flex-col justify-center items-center text-center">
+            <FontAwesomeIcon icon={faHome} className="text-[16px]" />
+            <p className="font-mono text-[12px]">Home</p>
+          </div>
+
+          <div className="flex-col justify-center items-center text-center">
+            <FontAwesomeIcon icon={faMapLocation} className="text-[16px]" />
+            <p className="font-mono text-[12px]">Home</p>
+          </div>
+
+          <div className="flex-col justify-center items-center text-center">
+            <FontAwesomeIcon icon={faNavicon} className="text-[16px]" />
+            <p className="font-mono text-[12px]">Home</p>
+          </div>
+
+          <div className="flex-col justify-center items-center text-center">
+            <FontAwesomeIcon icon={faUser} className="text-[16px]" />
+            <p className="font-mono text-[12px]">Profile</p>
+          </div>
+        </div>
       </div>
     </div>
   );
