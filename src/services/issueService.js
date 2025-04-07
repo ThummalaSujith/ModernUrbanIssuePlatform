@@ -4,10 +4,12 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 export const postIssue = async (issueData) => {
   try {
     // Validate input
-    if (!issueData?.title?.trim()) throw new Error('Title is required');
+    
     if (!issueData?.description?.trim()) throw new Error('Description is required');
-    if (!issueData?.imageUrl) throw new Error('Image URL is required');
+    if (!issueData?.imageBase64) throw new Error('Image data is missing');
+if (!issueData?.imageType) throw new Error('Image type is missing');
     if (!issueData?.location) throw new Error('Location is required');
+
 
     // Get authentication tokens
     const { tokens } = await fetchAuthSession();
@@ -15,7 +17,7 @@ export const postIssue = async (issueData) => {
       throw new Error('Authentication required - Please sign in');
     }
 
-    const idToken = tokens.idToken.toString();
+    const idToken = tokens.idToken.toString();  //converting to plain string
 
     // Make API call
     const response = await post({
