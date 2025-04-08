@@ -44,3 +44,11 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+
+
+amplify/
+.amplify-backup/
+.config/
+team-provider-info.json
+cli.json

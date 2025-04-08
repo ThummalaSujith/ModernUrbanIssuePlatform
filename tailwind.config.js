@@ -10,8 +10,9 @@ module.exports = {
         'custom-blue': '#243c5a',
       },
       fontFamily: {
-        'sans': ['Montserrat', 'sans-serif'],
-        'karla': ['Karla', 'sans-serif']
+        
+        karla: ['Karla', 'sans-serif'],
+        roboto: ['"Roboto Condensed"', 'sans-serif'],
 
         
       }

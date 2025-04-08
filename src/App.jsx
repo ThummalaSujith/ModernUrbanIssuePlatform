@@ -10,6 +10,9 @@ import { store } from './redux/store';
 
 import {fetchIssues} from "./services/getissueService"
 
+
+import { APIProvider } from "@vis.gl/react-google-maps";
+
 const App = () => {
 
   useEffect(() => {
@@ -23,13 +26,15 @@ const App = () => {
 
 
   return (
-    <Provider store={store}>
-    <Router>
-      <PageLayout />
-    </Router>
-
-    </Provider>
+    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+      <Provider store={store}>
+        <Router>
+          <PageLayout />
+        </Router>
+      </Provider>
+    </APIProvider>
   );
+
 }
 
 const PageLayout = () => {

@@ -86,6 +86,8 @@ const IssueForm = () => {
       e.target.value = "";
     }
   };
+
+
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
       setLocationError("Geolocation is not supported by your browser");
@@ -372,8 +374,11 @@ const IssueForm = () => {
         >
           <option value="" className="font-mono">Select a Category</option>
           <option value="Road Damage " className="font-mono">Road Damage</option>
-          <option value="Traffic light Problem" className="font-mono">Traffic light Problem</option>
-          <option value="Other Issue" className="font-mono">Other Issue</option>
+          <option value="Lighting" className="font-mono">Lighting</option>
+          <option value="Garbage" className="font-mono">Grabage</option>
+          <option value="Parks" className="font-mono">Parks</option>
+          <option value="Water" className="font-mono">Water</option>
+          <option value="Other" className="font-mono">Other</option>
         </select>
       </div>
 
@@ -385,7 +390,7 @@ const IssueForm = () => {
         </div>
         <div className="flex items-center space-x-2 font-mono  mt-3">
           <div
-            className="cursor-pointer flex space-x-1.5 font-mono"
+            className="cursor-pointer flex space-x-1.5 font-mono mt-[42px]"
             onClick={handleGetLocation}
           >
             <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-700 " />
@@ -393,6 +398,7 @@ const IssueForm = () => {
               Use current location
             </p>
           </div>
+        
         </div>
       </div>
 

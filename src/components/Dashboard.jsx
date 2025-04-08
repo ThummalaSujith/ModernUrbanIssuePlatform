@@ -18,10 +18,29 @@ import {
 import { Link } from "react-router-dom";
 import IssueCard from "./issues/IssueCard";
 
-import { getIssues } from '../redux/slices/issueSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+
+import { getIssues } from "../redux/slices/issueSlice";
+
+import { APIProvider, useMapsLibrary } from "@vis.gl/react-google-maps";
+
+
 
 export const Dashboard = () => {
+  // const [address, setAddress] = useState("");
+  const dispatch = useDispatch();
+
+  const { data: issues, loading, error } = useSelector((state) => state.issues);
+
+  console.log("issues:", issues);
+
+  useEffect(() => {
+    dispatch(getIssues());
+  }, [dispatch]);
+
   return (
+    <APIProvider apiKey={`${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`}>
     <div>
       <div className="header w-full h-16 bg-red-400 flex justify-between">
         <div className="Logo_heading py-4 px-4">
@@ -96,57 +115,14 @@ export const Dashboard = () => {
 
         {/* Recent_Report_cards */}
 
-        <div className="Recent_Reports_Card h-32 bg-gray-200 mt-2 rounded-[6px] py-4 px-4  ">
-          <div className="flex  justify-between">
-            <div className="Status_button w-[110px] bg-yellow-300 h-8 rounded-[6px] ">
-              <p className="flex items-center justify-center py-1.5 font-mono text-[13px] text-amber-700">
-                In Progress
-              </p>
-            </div>
+        <div className="issues-list">
 
-            <p className="text-[13px] font-mono flex">2h ago</p>
-          </div>
-
-          <p className="font-mono font-medium text-[14px] py-1 ">
-            Broken Street Light
-          </p>
-          <p className="font-mono text-[11px] text-gray-600 py-1">
-            {" "}
-            Main Street, near central park
-          </p>
-          <div className="flex gap-1.5 items-center py-1">
-            <FontAwesomeIcon icon={faComment} className="text-gray-600" />
-            <p className="font-mono text-[12px]">3 Updates</p>
-          </div>
+        <div className="issues-list">
+  {issues.map((issue) => (
+    <IssueCard key={issue.id} issue={issue} />
+  ))}
+</div>
         </div>
-
-        <div className="Recent_Reports_Card h-32 bg-gray-200 mt-2 rounded-[6px] py-4 px-4  ">
-          <div className="flex  justify-between">
-            <div className="Status_button w-[110px] bg-green-300 h-8 rounded-[6px] ">
-              <p className="flex items-center justify-center py-1.5 font-mono text-[13px] text-green-900">
-                Resolved
-              </p>
-            </div>
-
-            <p className="text-[13px] font-mono flex">2h ago</p>
-          </div>
-
-          <p className="font-mono font-medium text-[14px] py-1 ">
-            Broken Street Light
-          </p>
-          <p className="font-mono text-[11px] text-gray-600 py-1">
-            {" "}
-            Main Street, near central park
-          </p>
-          <div className="flex gap-1.5 items-center py-1">
-            <FontAwesomeIcon icon={faComment} className="text-gray-600" />
-            <p className="font-mono text-[12px]">3 Updates</p>
-          </div>
-        </div>
-
-        <IssueCard/>
-
-        
       </div>
 
       <div className="fixed bottom-0 right-0 left-0 border-t shadow-sm border-gray-200 h-16 bg-white">
@@ -158,12 +134,12 @@ export const Dashboard = () => {
 
           <div className="flex-col justify-center items-center text-center">
             <FontAwesomeIcon icon={faMapLocation} className="text-[16px]" />
-            <p className="font-mono text-[12px]">Home</p>
+            <p className="font-mono text-[12px]">Maps</p>
           </div>
 
           <div className="flex-col justify-center items-center text-center">
             <FontAwesomeIcon icon={faNavicon} className="text-[16px]" />
-            <p className="font-mono text-[12px]">Home</p>
+            <p className="font-mono text-[12px]">Reports</p>
           </div>
 
           <div className="flex-col justify-center items-center text-center">
@@ -173,5 +149,6 @@ export const Dashboard = () => {
         </div>
       </div>
     </div>
+    </APIProvider>
   );
 };
