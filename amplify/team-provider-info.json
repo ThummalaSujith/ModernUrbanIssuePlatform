@@ -29,6 +29,11 @@
         "urbanissueSpecificFunction": {
           "deploymentBucketName": "amplify-urbanissueplatform-dev-f5042-deployment",
           "s3Key": "amplify-builds/urbanissueSpecificFunction-6f3739434b492b757654-build.zip"
+        },
+        "urbanissueplatformb22d7001CustomMessage": {
+          "REDIRECTURL": "",
+          "EMAILSUBJECT": "",
+          "EMAILMESSAGE": ""
         }
       },
       "storage": {

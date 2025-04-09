@@ -10,6 +10,8 @@ import { store } from './redux/store';
 
 import {fetchIssues} from "./services/getissueService"
 
+import IssueDetails from "./components/issues/IssueDetails"
+
 
 import { APIProvider } from "@vis.gl/react-google-maps";
 
@@ -39,7 +41,7 @@ const App = () => {
 
 const PageLayout = () => {
   const location = useLocation();
-  const hideNavbarRoutes = ["/report", "/dashboard"];
+  const hideNavbarRoutes = ["/report", "/dashboard","/issue/"];
   const showNavbar = !hideNavbarRoutes.some(path => location.pathname.startsWith(path));
 
 
@@ -49,6 +51,7 @@ const PageLayout = () => {
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/report" element={<IssueForm />} />
+        <Route path="/issue/:id" element={<IssueDetails />} /> 
       </Routes>
     </div>
   );

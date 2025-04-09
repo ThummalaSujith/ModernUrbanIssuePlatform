@@ -119,7 +119,10 @@ export const Dashboard = () => {
 
         <div className="issues-list">
   {issues.map((issue) => (
-    <IssueCard key={issue.id} issue={issue} />
+     <Link to={`/issue/${issue.id}`}>
+         <IssueCard key={issue.id} issue={issue} />
+     </Link>
+ 
   ))}
 </div>
         </div>

@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import IssueMap from "../map/IssueMap";
 import { postIssue } from "../../services/issueService";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
+import { getCurrentUser ,fetchAuthSession } from 'aws-amplify/auth';
 import {
   faCamera,
   faImages,
@@ -11,11 +12,9 @@ import {
   faTimes,
   faFolder,
   faChevronRight,
-  faArrowLeft
+  faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-
-
 
 const IssueForm = () => {
   const [position, setPosition] = useState(null);
@@ -29,6 +28,7 @@ const IssueForm = () => {
     imagePreview: null,
     location: null,
   });
+
 
   const [base64Image, setBase64Image] = useState("");
 
@@ -78,15 +78,14 @@ const IssueForm = () => {
         setBase64Image(reader.result.split(",")[1]);
       };
 
-      reader.onerror=(error)=>{
-        console.log("Error reading file",error)
-      }
+      reader.onerror = (error) => {
+        console.log("Error reading file", error);
+      };
 
       setShowOptions(false);
       e.target.value = "";
     }
   };
-
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -148,8 +147,18 @@ const IssueForm = () => {
 
     console.log("Submitting:", formData);
 
-    try{
+    try {
+      const { username } = await getCurrentUser();
+      const userInfo = await fetchAuthSession();
 
+
+      const { tokens } = await fetchAuthSession();
+      console.log("ID Token payload:", tokens.idToken?.payload);
+      
+
+
+
+      const preferredUsername = userInfo.tokens?.idToken?.payload?.['cognito:username'];
       const imageType = formData.image.type.split("/")[1];
 
       const payload = {
@@ -157,55 +166,48 @@ const IssueForm = () => {
         description: formData.description,
         location: formData.location,
         imageBase64: base64Image,
-        imageType: imageType
+        imageType: imageType,
+        submittedBy: preferredUsername || username
       };
-  
-    const response=   await postIssue(payload)
 
+      const response = await postIssue(payload);
 
       // 🧹 Clear form after success
-  setFormData({
-    category: "",
-    description: "",
-    image: null,
-    location: null,
-    imagePreview:null
-  });
+      setFormData({
+        category: "",
+        description: "",
+        image: null,
+        location: null,
+        imagePreview: null,
+      });
 
-  setBase64Image("");
+      setBase64Image("");
 
+      const clearFileInput = (id) => {
+        const input = document.getElementById(id);
+        if (input) input.value = "";
+      };
 
+      clearFileInput("camera-input");
+      clearFileInput("gallery-input");
+      clearFileInput("file-input");
 
-  const clearFileInput = (id) => {
-    const input = document.getElementById(id);
-    if (input) input.value = "";
-  };
-  
-  clearFileInput("camera-input");
-  clearFileInput("gallery-input");
-  clearFileInput("file-input");
-
-    console.log("Server Response:",response)
-    }catch(error){
-      console.error("submission failed",error.message)
+      console.log("Server Response:", response);
+    } catch (error) {
+      console.error("submission failed", error.message);
     }
-    setIsSubmitting(false); 
-  
+    setIsSubmitting(false);
   };
 
   return (
     <div className="container font-karla">
       <div className="header flex justify-between items-center mb-4 px-6 mt-4 border-b border-gray-300 shadow-sm h-12">
         <Link to="/dashboard" className="left_awrow">
-
-<FontAwesomeIcon icon={faArrowLeft}/>
-
+          <FontAwesomeIcon icon={faArrowLeft} />
         </Link>
         <div className="text-xl font-semibold font-mono">Report Issue</div>
         <div className="cancel">
-
-
-        <FontAwesomeIcon icon={faTimes}/>
+          <FontAwesomeIcon icon={faTimes} />
         </div>
       </div>
 
@@ -326,7 +328,9 @@ const IssueForm = () => {
                   onChange={handleImageCapture}
                   className="hidden"
                 />
-                <p className="flex justify-center font-mono ">Choose from Gallery</p>
+                <p className="flex justify-center font-mono ">
+                  Choose from Gallery
+                </p>
                 <FontAwesomeIcon
                   icon={faChevronRight}
                   className="text-gray-500 ml-auto px-4"
@@ -351,7 +355,9 @@ const IssueForm = () => {
                   className="hidden"
                 />
 
-                <p className="flex justify-center font-mono">Select from Files</p>
+                <p className="flex justify-center font-mono">
+                  Select from Files
+                </p>
                 <FontAwesomeIcon
                   icon={faChevronRight}
                   className="text-gray-500 ml-auto px-4"
@@ -365,20 +371,36 @@ const IssueForm = () => {
       {/* Category Section */}
 
       <div className="category px-4 mt-4">
-        <p className="block text-sm font-bold text-gray-700 font-mono">Category</p>
+        <p className="block text-sm font-bold text-gray-700 font-mono">
+          Category
+        </p>
         <select
           name="category"
           value={formData.category}
           onChange={handleInputChange}
           className=" mt-2 block w-full border border-gray-300 rounded-md bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none  focus:ring-indigo-500 sm:text-sm"
         >
-          <option value="" className="font-mono">Select a Category</option>
-          <option value="Road Damage " className="font-mono">Road Damage</option>
-          <option value="Lighting" className="font-mono">Lighting</option>
-          <option value="Garbage" className="font-mono">Grabage</option>
-          <option value="Parks" className="font-mono">Parks</option>
-          <option value="Water" className="font-mono">Water</option>
-          <option value="Other" className="font-mono">Other</option>
+          <option value="" className="font-mono">
+            Select a Category
+          </option>
+          <option value="Road Damage " className="font-mono">
+            Road Damage
+          </option>
+          <option value="Lighting" className="font-mono">
+            Lighting
+          </option>
+          <option value="Garbage" className="font-mono">
+            Grabage
+          </option>
+          <option value="Parks" className="font-mono">
+            Parks
+          </option>
+          <option value="Water" className="font-mono">
+            Water
+          </option>
+          <option value="Other" className="font-mono">
+            Other
+          </option>
         </select>
       </div>
 
@@ -398,12 +420,13 @@ const IssueForm = () => {
               Use current location
             </p>
           </div>
-        
         </div>
       </div>
 
       <div className="description px-4 mt-4">
-        <p className="block text-sm font-bold text-gray-700 font-mono ">Description</p>
+        <p className="block text-sm font-bold text-gray-700 font-mono ">
+          Description
+        </p>
         <textarea
           name="description"
           value={formData.description}
@@ -418,7 +441,7 @@ const IssueForm = () => {
           className="text-2xl bg-black text-white py-3 rounded-[9px] px-20  font-mono "
           onClick={handleSubmit}
         >
-         {isSubmitting ? "Submitting..." : "Submit Report"}
+          {isSubmitting ? "Submitting..." : "Submit Report"}
         </button>
       </div>
     </div>

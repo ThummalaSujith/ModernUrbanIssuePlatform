@@ -6,7 +6,7 @@
     "resourceNameTruncated": "urbanib22d7001",
     "userPoolName": "urbanissueplatformb22d7001_userpool_b22d7001",
     "autoVerifiedAttributes": [
-      "phone_number"
+      "email"
     ],
     "mfaConfiguration": "OFF",
     "mfaTypes": [
@@ -16,23 +16,31 @@
     "smsVerificationMessage": "Your verification code is {####}",
     "emailVerificationSubject": "Your verification code",
     "emailVerificationMessage": "Your verification code is {####}",
-    "defaultPasswordPolicy": false,
+    "defaultPasswordPolicy": true,
     "passwordPolicyMinLength": 8,
-    "passwordPolicyCharacters": [],
+    "passwordPolicyCharacters": [
+      "Requires Uppercase",
+      "Requires Numbers"
+    ],
     "requiredAttributes": [
       "email"
+      
     ],
     "aliasAttributes": [],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
+      "name",
+      "profile",
       "email"
     ],
     "userpoolClientReadAttributes": [
-      "email"
+      "email",
+      "gender",
+      "name"
     ],
     "userpoolClientLambdaRole": "urbanib22d7001_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": false,
+    "userpoolClientSetAttributes": true,
     "sharedId": "b22d7001",
     "resourceName": "urbanissueplatformb22d7001",
     "authSelections": "identityPoolAndUserPool",
@@ -57,16 +65,32 @@
       ]
     },
     "breakCircularDependency": true,
-    "dependsOn": [],
+    "dependsOn": [
+      {
+        "category": "function",
+        "resourceName": "urbanissueplatformb22d7001CustomMessage",
+        "triggerProvider": "Cognito",
+        "attributes": [
+          "Arn",
+          "Name"
+        ]
+      }
+    ],
     "thirdPartyAuth": false,
     "userPoolGroups": false,
     "adminQueries": false,
-    "triggers": {},
+    "triggers": {
+      "CustomMessage": [
+        "verification-link"
+      ]
+    },
     "hostedUI": false,
     "authProviders": [],
     "parentStack": {
       "Ref": "AWS::StackId"
     },
-    "permissions": []
+    "permissions": [],
+    "verificationBucketName": "urbanissueplatformb22d7001verificationbucket",
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"CustomMessage\",\n    \"lambdaFunctionName\": \"urbanissueplatformb22d7001CustomMessage\"\n  }\n]"
   }
 }

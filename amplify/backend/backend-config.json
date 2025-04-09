@@ -18,14 +18,27 @@
   "auth": {
     "urbanissueplatformb22d7001": {
       "customAuth": false,
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "urbanissueplatformb22d7001CustomMessage",
+          "triggerProvider": "Cognito"
+        }
+      ],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
         "mfaTypes": [
           "SMS"
         ],
         "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [],
+          "passwordPolicyCharacters": [
+            "REQUIRES_UPPERCASE",
+            "REQUIRES_NUMBERS"
+          ],
           "passwordPolicyMinLength": 8
         },
         "signupAttributes": [
@@ -36,7 +49,7 @@
           "EMAIL"
         ],
         "verificationMechanisms": [
-          "PHONE_NUMBER"
+          "EMAIL"
         ]
       },
       "providerPlugin": "awscloudformation",
@@ -81,43 +94,14 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "urbanissueplatformb22d7001CustomMessage": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "geo": {},
-  "parameters": {
-    "AMPLIFY_function_urbanissueFunction_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "urbanissueFunction"
-        }
-      ]
-    },
-    "AMPLIFY_function_urbanissueFunction_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "urbanissueFunction"
-        }
-      ]
-    },
-    "AMPLIFY_function_urbanissueSpecificFunction_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "urbanissueSpecificFunction"
-        }
-      ]
-    },
-    "AMPLIFY_function_urbanissueSpecificFunction_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "urbanissueSpecificFunction"
-        }
-      ]
-    }
-  },
   "storage": {
     "urbanissue": {
       "providerPlugin": "awscloudformation",

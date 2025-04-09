@@ -10,7 +10,6 @@ export type AmplifyDependentResourcesAttributes = {
     "urbanissueplatformb22d7001": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
-      "CreatedSNSRole": "string",
       "IdentityPoolId": "string",
       "IdentityPoolName": "string",
       "UserPoolArn": "string",
@@ -27,6 +26,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Region": "string"
     },
     "urbanissueSpecificFunction": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "urbanissueplatformb22d7001CustomMessage": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
