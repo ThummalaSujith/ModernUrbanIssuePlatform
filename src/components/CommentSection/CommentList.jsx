@@ -1,11 +1,27 @@
-import React from 'react'
+import React from "react";
+import Comment from "./Comment";
 
-const CommentList = () => {
+const CommentList = ({
+  comments,
+  currentUser,
+  onDelete,
+  onReply,
+  onUpdate,
+}) => {
   return (
-    <div>
-      
+    <div className="space-y-2">
+      {comments.map((comment) => (
+        <Comment
+          key={comment.commentId}
+          comment={comment}
+          currentUser={currentUser}
+          onDelete={onDelete}
+          onReply={onReply}
+          onUpdate={onUpdate}
+        />
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default CommentList
+export default CommentList;
