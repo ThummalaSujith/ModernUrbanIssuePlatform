@@ -159,6 +159,7 @@ const IssueForm = () => {
 
 
       const preferredUsername = userInfo.tokens?.idToken?.payload?.['cognito:username'];
+    console.log(username)
       const imageType = formData.image.type.split("/")[1];
 
       const payload = {

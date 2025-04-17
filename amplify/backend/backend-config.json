@@ -1,14 +1,22 @@
 {
   "api": {
-    "urbanissue": {
+    "AdminQueries": {
+      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
       "dependsOn": [
         {
           "attributes": [
-            "Name",
-            "Arn"
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "urbanissueapp730f97a8730f97a8"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
           ],
           "category": "function",
-          "resourceName": "urbanissueFunction"
+          "resourceName": "AdminQueries6aa433d9"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -16,40 +24,25 @@
     }
   },
   "auth": {
-    "urbanissueplatformb22d7001": {
+    "urbanissueapp730f97a8730f97a8": {
       "customAuth": false,
-      "dependsOn": [
-        {
-          "attributes": [
-            "Arn",
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "urbanissueplatformb22d7001CustomMessage",
-          "triggerProvider": "Cognito"
-        }
-      ],
+      "dependsOn": [],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
         "mfaTypes": [
           "SMS"
         ],
         "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [
-            "REQUIRES_UPPERCASE",
-            "REQUIRES_NUMBERS"
-          ],
+          "passwordPolicyCharacters": [],
           "passwordPolicyMinLength": 8
         },
         "signupAttributes": [
           "EMAIL"
         ],
         "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
+        "usernameAttributes": [],
         "verificationMechanisms": [
-          "EMAIL"
+          "PHONE_NUMBER"
         ]
       },
       "providerPlugin": "awscloudformation",
@@ -57,60 +50,37 @@
     }
   },
   "function": {
-    "urbanissueFunction": {
+    "AdminQueries6aa433d9": {
       "build": true,
       "dependsOn": [
         {
-          "attributeEnvMap": {
-            "Arn": "TABLE_ARN",
-            "Name": "TABLE_NAME"
-          },
           "attributes": [
-            "Name",
-            "Arn"
+            "UserPoolId"
           ],
-          "category": "storage",
-          "resourceName": "urbanissue"
+          "category": "auth",
+          "resourceName": "urbanissueapp730f97a8730f97a8"
         }
       ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "urbanissueSpecificFunction": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributeEnvMap": {
-            "Arn": "TABLE_ARN",
-            "Name": "TABLE_NAME"
-          },
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "storage",
-          "resourceName": "urbanissue"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "urbanissueplatformb22d7001CustomMessage": {
-      "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
-  "geo": {},
-  "storage": {
-    "urbanissue": {
-      "providerPlugin": "awscloudformation",
-      "service": "DynamoDB"
+  "parameters": {
+    "AMPLIFY_function_AdminQueries6aa433d9_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "AdminQueries6aa433d9"
+        }
+      ]
     },
-    "urbanissueimages": {
-      "dependsOn": [],
-      "providerPlugin": "awscloudformation",
-      "service": "S3"
+    "AMPLIFY_function_AdminQueries6aa433d9_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "AdminQueries6aa433d9"
+        }
+      ]
     }
   }
 }

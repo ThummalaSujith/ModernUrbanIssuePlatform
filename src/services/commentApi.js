@@ -1,8 +1,8 @@
 const API_BASE = "https://5cc1lcitg9.execute-api.eu-west-2.amazonaws.com/prod";
 
-export const getComments = async () => {
-  const res = await fetch(`${API_BASE}/comments?postid=${postId}`);
-  const data = res.json();
+export const getComments = async (postId) => {
+  const res = await fetch(`${API_BASE}/comments?postId=${postId}`);
+  const data = await res.json();
   return data;
 };
 
