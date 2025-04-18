@@ -14,6 +14,8 @@ import IssueDetails from "./components/issues/IssueDetails"
 
 
 import { APIProvider } from "@vis.gl/react-google-maps";
+import IssueMap from './components/map/IssueMap';
+import DetailedMap from './components/map/DetailedMap';
 
 const App = () => {
 
@@ -41,7 +43,7 @@ const App = () => {
 
 const PageLayout = () => {
   const location = useLocation();
-  const hideNavbarRoutes = ["/report", "/dashboard","/issue/"];
+  const hideNavbarRoutes = ["/report", "/dashboard","/issue/","/Map"];
   const showNavbar = !hideNavbarRoutes.some(path => location.pathname.startsWith(path));
 
 
@@ -52,6 +54,7 @@ const PageLayout = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/report" element={<IssueForm />} />
         <Route path="/issue/:id" element={<IssueDetails />} /> 
+        <Route path="/Map" element={<DetailedMap/>}/>
       </Routes>
     </div>
   );
