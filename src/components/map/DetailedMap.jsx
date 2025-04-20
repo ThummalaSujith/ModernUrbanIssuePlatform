@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {useState,useEffect} from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+
 const DetailedMap = () => {
 
     const [position, setPosition] = useState(null);
