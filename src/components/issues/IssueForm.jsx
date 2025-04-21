@@ -408,12 +408,12 @@ const IssueForm = () => {
       {/* Location Section */}
 
       <div className="location px-4 mt-4">
-        <div className="map  h-45 bg-gray-400 rounded-[9px] font-mono mt-2">
-          <IssueMap position={position} />
+        <div className="map  bg-gray-400 rounded-[9px] font-mono mt-2">
+          <IssueMap position={position}   />
         </div>
         <div className="flex items-center space-x-2 font-mono  mt-3">
           <div
-            className="cursor-pointer flex space-x-1.5 font-mono mt-[42px]"
+            className="cursor-pointer flex space-x-1.5 font-mono mt-[9px]"
             onClick={handleGetLocation}
           >
             <FontAwesomeIcon icon={faMapMarkerAlt} className="text-gray-700 " />
@@ -432,7 +432,7 @@ const IssueForm = () => {
           name="description"
           value={formData.description}
           onChange={handleInputChange}
-          className="mt-2 bloxk w-full  px-3 py-2 border border-gray-300 rounded h-40 placeholder:font-mono "
+          className=" bloxk w-full mt-3 px-3 py-2 border border-gray-300 rounded h-40 placeholder:font-mono "
           placeholder="Describe the issue in detail..."
         />
       </div>
