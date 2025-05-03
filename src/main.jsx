@@ -13,16 +13,7 @@ Amplify.configure({
   ...amplifyconfig,
   API: {
     endpoints: [
-      // Your existing AdminQueries API
-      {
-        name: 'AdminQueries',
-        endpoint: amplifyconfig.aws_cloud_logic_custom.find(api => api.name === 'AdminQueries')?.endpoint,
-        region: amplifyconfig.aws_project_region,
-        custom_header: async () => ({
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${(await fetchAuthSession()).tokens?.idToken?.toString()}`
-        })
-      },
+    
       // External FormSubmissionAPI
       {
         name: 'FormSubmissionAPI',

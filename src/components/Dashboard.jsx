@@ -36,7 +36,7 @@ export const Dashboard = () => {
   useEffect(() => {
     dispatch(getIssues());
   }, [dispatch]);
-
+  const [filter, setFilter] = useState("recent");
   return (
     <APIProvider apiKey={`${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`}>
       <div>
@@ -110,7 +110,26 @@ export const Dashboard = () => {
           <div className="flex justify-between">
             <h2 className="font-mono font-bold text-xl ">Recent Reports</h2>
 
-            <p className="font-mono text-[13px] font-bold">View All</p>
+
+
+  <div className="relative">
+  <select   value={filter} 
+  onChange={(e)=>setFilter(e.target.value)}
+  >
+  <option value="recent">
+Recent
+  </option>
+  <option value="nearby">
+    Nearby
+    </option>
+    <option value="View All">
+    View All
+    </option>
+</select>
+    </div>          {/* <p className="font-mono text-[13px] font-bold">View All</p> */}
+
+
+
           </div>
 
           {/* Recent_Report_cards */}

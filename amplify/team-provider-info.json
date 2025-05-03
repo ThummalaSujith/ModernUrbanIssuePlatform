@@ -1,28 +1,19 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-urbanissueapp-dev-b2956-authRole",
-      "UnauthRoleArn": "arn:aws:iam::575108949525:role/amplify-urbanissueapp-dev-b2956-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::575108949525:role/amplify-urbanissueapp-dev-b2956-authRole",
+      "AuthRoleName": "amplify-newurban-dev-d2ab8-authRole",
+      "UnauthRoleArn": "arn:aws:iam::575108949525:role/amplify-newurban-dev-d2ab8-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::575108949525:role/amplify-newurban-dev-d2ab8-authRole",
       "Region": "eu-west-2",
-      "DeploymentBucketName": "amplify-urbanissueapp-dev-b2956-deployment",
-      "UnauthRoleName": "amplify-urbanissueapp-dev-b2956-unauthRole",
-      "StackName": "amplify-urbanissueapp-dev-b2956",
-      "StackId": "arn:aws:cloudformation:eu-west-2:575108949525:stack/amplify-urbanissueapp-dev-b2956/d8ff5e30-1712-11f0-83b7-06673c02de35",
-      "AmplifyAppId": "d3l7ltj9i3dfrj"
+      "DeploymentBucketName": "amplify-newurban-dev-d2ab8-deployment",
+      "UnauthRoleName": "amplify-newurban-dev-d2ab8-unauthRole",
+      "StackName": "amplify-newurban-dev-d2ab8",
+      "StackId": "arn:aws:cloudformation:eu-west-2:575108949525:stack/amplify-newurban-dev-d2ab8/c17b5b30-2796-11f0-a0e0-025af002c7cf",
+      "AmplifyAppId": "do99kcnb6tu5e"
     },
     "categories": {
       "auth": {
-        "urbanissueapp730f97a8730f97a8": {}
-      },
-      "function": {
-        "AdminQueries6aa433d9": {
-          "deploymentBucketName": "amplify-urbanissueapp-dev-b2956-deployment",
-          "s3Key": "amplify-builds/AdminQueries6aa433d9-6a385451372b48713852-build.zip"
-        }
-      },
-      "api": {
-        "AdminQueries": {}
+        "newurban31873aa131873aa1": {}
       }
     }
   }

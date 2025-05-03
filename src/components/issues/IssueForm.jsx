@@ -165,7 +165,7 @@ const IssueForm = () => {
       const payload = {
         category: formData.category,
         description: formData.description,
-        location: formData.location,
+        location: formData.location, // Send as an object
         imageBase64: base64Image,
         imageType: imageType,
         submittedBy: preferredUsername || username
