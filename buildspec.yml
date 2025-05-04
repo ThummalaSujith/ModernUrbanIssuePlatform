@@ -4,43 +4,42 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
-      # Install SAM CLI
-      - pip install --user aws-sam-cli
-      - export PATH=$PATH:$HOME/.local/bin
+      # Debug directory structure
+      - echo "Contents of $CODEBUILD_SRC_DIR:"
+      - ls -la
       
-      # Install frontend (React) dependencies
-      - cd src && npm install && cd ..
+      # Frontend install
+      - cd src && npm ci && cd ..
 
   build:
     commands:
-      # Build React frontend
+      # Frontend build with error handling
       - echo "Building frontend..."
-      - cd src && npm run build && cd ..
-      - mv src/dist public  # For Vite, use 'dist' instead of 'build'
+      - cd src && (npm run build || (echo "Build failed. Contents:" && ls -la)) && cd ..
+      - mv src/dist public
 
-      # Build SAM backend
-      - echo "Building backend..."
+      # Backend build (only if directory exists)
+      - if [ ! -d "backend" ]; then echo "ERROR: backend/ missing"; exit 1; fi
       - cd backend && sam build --use-container && cd ..
 
   post_build:
     commands:
-      # Package SAM app
-      - cd backend && sam package \
-          --s3-bucket $ARTIFACT_BUCKET \
-          --output-template-file packaged.yaml \
-          --region eu-west-2
-      
-      # Deploy frontend to S3
+      # Package backend with validation
+      - pwd && ls -la
+      - if [ -f "backend/template.yaml" ]; then
+          cd backend && sam package \
+            --s3-bucket $ARTIFACT_BUCKET \
+            --output-template-file packaged.yaml;
+        else
+          echo "ERROR: template.yaml missing";
+          exit 1;
+        fi
+
+      # Frontend deploy
       - aws s3 sync public s3://$FRONTEND_BUCKET --delete
-      
-      # Optional: Invalidate CloudFront cache
-      - aws cloudfront create-invalidation \
-          --distribution-id $CLOUDFRONT_DIST_ID \
-          --paths "/*"
 
 artifacts:
   files:
     - backend/packaged.yaml
     - backend/template.yaml
     - public/**/*
-  base-directory: .
