@@ -39,6 +39,7 @@ phases:
         fi
 
       # Deploy frontend to S3
+      - cd .. # Go back to the project root directory first!
       - aws s3 sync public s3://$FRONTEND_BUCKET --delete
 
 artifacts:
