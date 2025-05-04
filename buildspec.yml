@@ -16,7 +16,7 @@ phases:
       # Build frontend (Vite)
       - echo "Building frontend..."
       - cd src && npm run build && cd ..
-      - mv src/dist public  # Vite uses 'dist' instead of 'build'
+      - mv dist public  # Vite uses 'dist' instead of 'build'
 
       # Build backend (SAM)
       - echo "Building backend..."
