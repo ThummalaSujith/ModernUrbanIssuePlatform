@@ -109,27 +109,17 @@ export const Dashboard = () => {
         <div className="Recent_Reports px-4 mt-3">
           <div className="flex justify-between">
             <h2 className="font-mono font-bold text-xl ">Recent Reports</h2>
-
-
-
-  <div className="relative">
-  <select   value={filter} 
-  onChange={(e)=>setFilter(e.target.value)}
-  >
-  <option value="recent">
-Recent
-  </option>
-  <option value="nearby">
-    Nearby
-    </option>
-    <option value="View All">
-    View All
-    </option>
-</select>
-    </div>          {/* <p className="font-mono text-[13px] font-bold">View All</p> */}
-
-
-
+            <div className="relative">
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              >
+                <option value="recent">Recent</option>
+                <option value="nearby">Nearby</option>
+                <option value="View All">View All</option>
+              </select>
+            </div>{" "}
+            {/* <p className="font-mono text-[13px] font-bold">View All</p> */}
           </div>
 
           {/* Recent_Report_cards */}

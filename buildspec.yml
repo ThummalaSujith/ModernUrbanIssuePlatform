@@ -1,0 +1,46 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      # Install SAM CLI
+      - pip install --user aws-sam-cli
+      - export PATH=$PATH:$HOME/.local/bin
+      
+      # Install frontend (React) dependencies
+      - cd src && npm install && cd ..
+
+  build:
+    commands:
+      # Build React frontend
+      - echo "Building frontend..."
+      - cd src && npm run build && cd ..
+      - mv src/dist public  # For Vite, use 'dist' instead of 'build'
+
+      # Build SAM backend
+      - echo "Building backend..."
+      - cd backend && sam build --use-container && cd ..
+
+  post_build:
+    commands:
+      # Package SAM app
+      - cd backend && sam package \
+          --s3-bucket $ARTIFACT_BUCKET \
+          --output-template-file packaged.yaml \
+          --region eu-west-2
+      
+      # Deploy frontend to S3
+      - aws s3 sync public s3://$FRONTEND_BUCKET --delete
+      
+      # Optional: Invalidate CloudFront cache
+      - aws cloudfront create-invalidation \
+          --distribution-id $CLOUDFRONT_DIST_ID \
+          --paths "/*"
+
+artifacts:
+  files:
+    - backend/packaged.yaml
+    - backend/template.yaml
+    - public/**/*
+  base-directory: .
