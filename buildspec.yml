@@ -30,7 +30,8 @@ phases:
   post_build:
     commands:
       # Package SAM app
-      - if [ -f "backend/template.yaml" ]; then
+      - |
+        if [ -f "backend/template.yaml" ]; then
           cd backend && sam package \
             --s3-bucket $ARTIFACT_BUCKET \
             --output-template-file packaged.yaml \
