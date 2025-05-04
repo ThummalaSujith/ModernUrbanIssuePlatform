@@ -4,38 +4,43 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
-      # Debug directory structure
-      - echo "Contents of $CODEBUILD_SRC_DIR:"
-      - ls -la
-      
-      # Frontend install
+      # Install SAM CLI
+      - pip install --user aws-sam-cli
+      - export PATH=$PATH:$HOME/.local/bin
+
+      # Install frontend dependencies
       - cd src && npm ci && cd ..
 
   build:
     commands:
-      # Frontend build with error handling
+      # Build frontend (Vite)
       - echo "Building frontend..."
-      - cd src && (npm run build || (echo "Build failed. Contents:" && ls -la)) && cd ..
-      - mv src/dist public
+      - cd src && npm run build && cd ..
+      - mv src/dist public  # Vite uses 'dist' instead of 'build'
 
-      # Backend build (only if directory exists)
-      - if [ ! -d "backend" ]; then echo "ERROR: backend/ missing"; exit 1; fi
-      - cd backend && sam build --use-container && cd ..
-
-  post_build:
-    commands:
-      # Package backend with validation
-      - pwd && ls -la
-      - if [ -f "backend/template.yaml" ]; then
-          cd backend && sam package \
-            --s3-bucket $ARTIFACT_BUCKET \
-            --output-template-file packaged.yaml;
+      # Build backend (SAM)
+      - echo "Building backend..."
+      - if [ -d "backend" ]; then
+          cd backend && sam build --use-container;
         else
-          echo "ERROR: template.yaml missing";
+          echo "Error: backend directory missing";
           exit 1;
         fi
 
-      # Frontend deploy
+  post_build:
+    commands:
+      # Package SAM app
+      - if [ -f "backend/template.yaml" ]; then
+          cd backend && sam package \
+            --s3-bucket $ARTIFACT_BUCKET \
+            --output-template-file packaged.yaml \
+            --region eu-west-2;
+        else
+          echo "Error: template.yaml missing";
+          exit 1;
+        fi
+
+      # Deploy frontend to S3
       - aws s3 sync public s3://$FRONTEND_BUCKET --delete
 
 artifacts:
@@ -43,3 +48,4 @@ artifacts:
     - backend/packaged.yaml
     - backend/template.yaml
     - public/**/*
+  base-directory: .
