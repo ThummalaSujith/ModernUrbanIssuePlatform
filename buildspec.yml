@@ -32,7 +32,7 @@ phases:
        # Package SAM app (Note: Current directory is 'backend' at this point)
       - | # Check for template.yaml in the current directory
         if [ -f "template.yaml" ]; then
-          sam package \ # No need to 'cd backend' again
+          sam package \ 
             --s3-bucket $ARTIFACT_BUCKET \
             --output-template-file packaged.yaml \
             --region eu-west-2;
