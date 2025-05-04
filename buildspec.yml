@@ -32,10 +32,7 @@ phases:
        # Package SAM app (Note: Current directory is 'backend' at this point)
       - | # Check for template.yaml in the current directory
         if [ -f "template.yaml" ]; then
-          sam package \ 
-            --s3-bucket $ARTIFACT_BUCKET \
-            --output-template-file packaged.yaml \
-            --region eu-west-2;
+          sam package --s3-bucket $ARTIFACT_BUCKET --output-template-file packaged.yaml --region eu-west-2;
         else
           echo "Error: template.yaml missing";
           exit 1;
