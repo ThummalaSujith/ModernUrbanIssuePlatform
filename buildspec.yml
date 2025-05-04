@@ -20,13 +20,13 @@ phases:
 
       # Build backend (SAM)
       - echo "Building backend..."
-      - if [ -d "backend" ]; then
+      - |
+        if [ -d "backend" ]; then
           cd backend && sam build --use-container;
         else
           echo "Error: backend directory missing";
           exit 1;
         fi
-
   post_build:
     commands:
       # Package SAM app
