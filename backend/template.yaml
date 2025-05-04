@@ -1,0 +1,116 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Urban Issue Platform - Using existing API Gateways
+
+Parameters:
+  CommentApiId:
+    Type: String
+    Default: "5cc1lcitg9"
+    Description: Existing Comment Service API Gateway ID
+  FormApiId:
+    Type: String
+    Default: "8ckklc5esd"
+    Description: Existing Form Submission API Gateway ID
+
+Resources:
+  # Lambda Functions with permissions for existing API Gateway
+  CreateCommentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/createComment/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          COMMENT_TABLE: "CommentTable"
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: "CommentTable"
+
+  CreateCommentApiPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt CreateCommentFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CommentApiId}/*/POST/comments"
+
+  # Repeat the pattern for other functions
+  GetCommentsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/getComments/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          COMMENT_TABLE: "CommentTable"
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: "CommentTable"
+
+  GetCommentsApiPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt GetCommentsFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CommentApiId}/*/GET/comments"
+
+  # Form Submission Function
+  FormSubmissionHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/form-submission-handler/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          ISSUE_TABLE: "urbanissue-dev"
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: "urbanissue-dev"
+
+  FormSubmissionApiPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt FormSubmissionHandler.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${FormApiId}/*/POST/submit"
+
+  # Issues Function
+  GetIssuesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/GetIssues/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          ISSUE_TABLE: "urbanissue-dev"
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: "urbanissue-dev"
+
+  GetIssuesApiPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt GetIssuesFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${FormApiId}/*/GET/getissue"
+
+Outputs:
+  CreateCommentFunctionArn:
+    Description: ARN of Create Comment Lambda
+    Value: !GetAtt CreateCommentFunction.Arn
+  GetCommentsFunctionArn:
+    Description: ARN of Get Comments Lambda
+    Value: !GetAtt GetCommentsFunction.Arn
+  FormSubmissionHandlerArn:
+    Description: ARN of Form Submission Lambda
+    Value: !GetAtt FormSubmissionHandler.Arn
+  GetIssuesFunctionArn:
+    Description: ARN of Get Issues Lambda
+    Value: !GetAtt GetIssuesFunction.Arn

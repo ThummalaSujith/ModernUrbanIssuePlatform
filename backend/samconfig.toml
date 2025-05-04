@@ -1,0 +1,11 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "urbandeploy"
+resolve_s3 = true
+s3_prefix = "urbandeploy"
+region = "eu-west-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = []
+parameter_overrides = "CommentApiId=\"5cc1lcitg9\" FormApiId=\"8ckklc5esd\""
