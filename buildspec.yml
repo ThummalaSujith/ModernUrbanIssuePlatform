@@ -16,7 +16,7 @@ phases:
       # Build frontend (Vite)
       - echo "Building frontend..."
       - cd src && npm run build && cd ..
-      - mv dist public 
+     
 
       # Build backend (SAM)
       - echo "Building backend..."
@@ -40,11 +40,11 @@ phases:
 
       # Deploy frontend to S3
       - cd .. 
-      - aws s3 sync public s3://$FRONTEND_BUCKET --delete
+      - aws s3 sync dist s3://$FRONTEND_BUCKET --delete
 
 artifacts:
   files:
     - backend/packaged.yaml
     - backend/template.yaml
-    - public/**/*
+    - dist/**/*
   base-directory: .
