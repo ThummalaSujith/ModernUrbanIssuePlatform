@@ -48,3 +48,8 @@ artifacts:
     - backend/template.yaml
     - dist/**/*
   base-directory: .
+
+cache:
+  paths:
+    # Cache frontend node modules relative to the source directory
+    - 'src/node_modules/**/*'
