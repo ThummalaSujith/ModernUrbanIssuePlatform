@@ -16,7 +16,7 @@ phases:
       # Build frontend (Vite)
       - echo "Building frontend..."
       - cd src && npm run build && cd ..
-      - mv dist public  # Vite uses 'dist' instead of 'build'
+      - mv dist public 
 
       # Build backend (SAM)
       - echo "Building backend..."
@@ -39,7 +39,7 @@ phases:
         fi
 
       # Deploy frontend to S3
-      - cd .. # Go back to the project root directory first
+      - cd .. 
       - aws s3 sync public s3://$FRONTEND_BUCKET --delete
 
 artifacts:
