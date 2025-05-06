@@ -20,6 +20,7 @@ import IssueCard from "./issues/IssueCard";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 import { getIssues } from "../redux/slices/issueSlice";
 
@@ -30,13 +31,105 @@ export const Dashboard = () => {
   const dispatch = useDispatch();
 
   const { data: issues, loading, error } = useSelector((state) => state.issues);
-
+  const [userLocation, setUserLocation] = useState(null);
+  const [filter, setFilter] = useState("recent");
+  const [locationError, setLocationError] = useState(null);
+  const [categoryFilter, setCategoryFilter] = useState(null);
   console.log("issues:", issues);
 
   useEffect(() => {
     dispatch(getIssues());
   }, [dispatch]);
-  const [filter, setFilter] = useState("recent");
+
+  //User location
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        setLocationError(null);
+      },
+      (error) => {
+        setLocationError(error.message);
+        setUserLocation(null);
+      }
+    );
+  }, []);
+
+  function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1);
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+  }
+
+  function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+  }
+
+  const filteredIssues = useMemo(() => {
+    if (loading || error || !issues) return [];
+
+    if (issues.length === 0) return [];
+    // 1. Start with all issues
+
+    let processedList = [...issues];
+
+    if (categoryFilter) {
+      processedList = processedList.filter(
+        (issue) => issue.category === categoryFilter
+      );
+    }
+
+    switch (filter) {
+      case "recent":
+        processedList.sort(
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        );
+        break;
+      case "nearby":
+        if (userLocation) {
+          processedList = processedList
+            .map((issue) => ({
+              ...issue,
+              distance:
+                issue.location?.lat && issue.location?.lng
+                  ? getDistanceFromLatLonInKm(
+                      userLocation.lat,
+                      userLocation.lng,
+                      issue.location.lat,
+                      issue.location.lng
+                    )
+                  : Infinity,
+            }))
+
+            .sort((a, b) => a.distance - b.distance);
+        } else {
+          processedList.sort(
+            (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+          );
+        }
+        break;
+
+      case "View All":
+      default:
+        break;
+    }
+
+    return processedList;
+  }, [issues, filter, userLocation, categoryFilter]);
+
   return (
     <APIProvider apiKey={`${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`}>
       <div>
@@ -69,42 +162,97 @@ export const Dashboard = () => {
         <div className="Common_Issues mt-8">
           <h5 className="font-mono font-bold text-xl px-4">Common Issues</h5>
 
+          {categoryFilter && (
+            <div className="px-4 mt-2">
+              <button
+                onClick={() => setCategoryFilter(null)}
+                className="text-xs bg-gray-500 hover:bg-gray-600 text-white py-1 px-2 rounded font-mono"
+              >
+                Clear Filter: {categoryFilter}
+              </button>
+            </div>
+          )}
+
           <div className="grid grid-cols-3 gap-4 p-4">
-            <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <div
+              className={`flex flex-col items-center bg-gray-200 rounded-xl shadow p-4 cursor-pointer transition-colors ${
+                categoryFilter === "Road Damage"
+                  ? "bg-red-200 ring-2 ring-red-400"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+              onClick={() => setCategoryFilter("Road Damage")}
+            >
               <FontAwesomeIcon icon={faRoad} className="text-black-400" />
-              <p className="mt-2 text-black-700 font-medium font-mono">Roads</p>
+              <p className="mt-2 text-black-700 font-medium font-mono">Road</p>
             </div>
 
-            <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <div
+              className={`flex flex-col items-center bg-gray-200 rounded-xl shadow p-4 cursor-pointer transition-colors ${
+                categoryFilter === "Lighting"
+                  ? "bg-red-200 ring-2 ring-red-400"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+              onClick={() => setCategoryFilter("Lighting")}
+            >
               <FontAwesomeIcon icon={faLightbulb} className="text-yellow-400" />
               <p className="mt-2 text-black-700 font-medium font-mono">
                 Lighting
               </p>
             </div>
 
-            <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <div
+              className={`flex flex-col items-center bg-gray-200 rounded-xl shadow p-4 cursor-pointer transition-colors ${
+                categoryFilter === "Garbage"
+                  ? "bg-red-200 ring-2 ring-red-400"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+              onClick={() => setCategoryFilter("Garbage")}
+            >
               <FontAwesomeIcon icon={faTrashAlt} className="text-red-400" />
               <p className="mt-2 text-black-700 font-medium font-mono">
                 Garbage
               </p>
             </div>
 
-            <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <div
+              className={`flex flex-col items-center bg-gray-200 rounded-xl shadow p-4 cursor-pointer transition-colors ${
+                categoryFilter === "Parks"
+                  ? "bg-red-200 ring-2 ring-red-400"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+              onClick={() => setCategoryFilter("Parks")}
+            >
               <FontAwesomeIcon icon={faTree} className="text-green-400" />
               <p className="mt-2 text-black-700 font-medium font-mono">Parks</p>
             </div>
 
-            <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <div
+              className={`flex flex-col items-center bg-gray-200 rounded-xl shadow p-4 cursor-pointer transition-colors ${
+                categoryFilter === "Water"
+                  ? "bg-red-200 ring-2 ring-red-400"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+              onClick={() => setCategoryFilter("Water")}
+            >
               <FontAwesomeIcon icon={faWater} className="text-blue-400" />
               <p className="mt-2 text-black-700 font-medium font-mono">Water</p>
             </div>
 
-            <div className="flex flex-col items-center bg-gray-200 rounded-xl shadow p-4">
+            <div
+              className={`flex flex-col items-center bg-gray-200 rounded-xl shadow p-4 cursor-pointer transition-colors ${
+                categoryFilter === "Other"
+                  ? "bg-red-200 ring-2 ring-red-400"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+              onClick={() => setCategoryFilter("Other")}
+            >
               <FontAwesomeIcon icon={faEllipsisH} className="text-black-400" />
               <p className="mt-2 text-black-700 font-medium font-mono">More</p>
             </div>
           </div>
         </div>
+
+        
 
         <div className="Recent_Reports px-4 mt-3">
           <div className="flex justify-between">
@@ -113,6 +261,7 @@ export const Dashboard = () => {
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
+                className="border border-gray-300 rounded-md pl-1 pr-6 py-1 text-sm bg-white font-mono focus:outline-none "
               >
                 <option value="recent">Recent</option>
                 <option value="nearby">Nearby</option>
@@ -122,11 +271,18 @@ export const Dashboard = () => {
             {/* <p className="font-mono text-[13px] font-bold">View All</p> */}
           </div>
 
+          {loading && <p className="text-center mt-4 text-gray-600 ">Loading reports...</p>}
+          {error && <p className="text-center mt-4 text-gray-600 ">Error loading reports.</p>}
+{
+  !loading && !error && filteredIssues.length ===0 &&(
+    <p className="font-mono text-gray-400 text-center mt-5">No reports found.</p>
+  )
+}
           {/* Recent_Report_cards */}
 
           <div className="issues-list">
             <div className="issues-list">
-              {issues.map((issue) => (
+              {filteredIssues.map((issue) => (
                 <Link to={`/issue/${issue.id}`}>
                   <IssueCard key={issue.id} issue={issue} />
                 </Link>
@@ -135,7 +291,7 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        <div className="fixed bottom-0 right-0 left-0 border-t shadow-sm border-gray-200 h-16 bg-white">
+        <div className="fixed bottom-0 right-0 left-0 border-t shadow-sm border-gray-200 h-16 bg-white py-2">
           <div className="flex justify-around">
             <div className="flex-col justify-center items-center text-center">
               <FontAwesomeIcon icon={faHome} className="text-[16px]" />
@@ -155,10 +311,12 @@ export const Dashboard = () => {
               <p className="font-mono text-[12px]">Reports</p>
             </div>
 
-            <div className="flex-col justify-center items-center text-center">
-              <FontAwesomeIcon icon={faUser} className="text-[16px]" />
-              <p className="font-mono text-[12px]">Profile</p>
-            </div>
+            <Link to="/profile">
+              <div className="flex-col justify-center items-center text-center">
+                <FontAwesomeIcon icon={faUser} className="text-[16px]" />
+                <p className="font-mono text-[12px]">Profile</p>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
