@@ -5,6 +5,9 @@
 
 ---
 
+## 🖼️ Architecture Diagram
+![Urban Eye Architecture](architecture.jpg)
+
 ## 🚀 Features
 - **🔐 User Accounts**: Secure sign-in and authentication via **AWS Cognito**
 - **📊 Dashboard**: View previously reported urban issues
@@ -77,8 +80,7 @@ Urban Eye is divided into three serverless tiers:
 
 ---
 
-## 🖼️ Architecture Diagram
-![Urban Eye Architecture](architecture.jpg)
+
 
 
 
