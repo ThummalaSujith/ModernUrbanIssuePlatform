@@ -78,7 +78,7 @@ Urban Eye is divided into three serverless tiers:
 ---
 
 ## 🖼️ Architecture Diagram
-[📄 View Urban Eye Architecture (PDF)](architecture.pdf)
+[📄 View Urban Eye Architecture (PDF)](architecture.jpg)
 
 
 
