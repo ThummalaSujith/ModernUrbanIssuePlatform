@@ -1,11 +1,20 @@
 import React from "react";
-import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { 
+    faComment, 
+    faMapMarkerAlt,
+    faRoad,
+    faLightbulb,
+    faTrashAlt,
+    faTree,
+    faWater,
+    faEllipsisH,
+    faQuestionCircle
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { useReverseGeocode } from "../../Hooks/useReverseGeocode";
 
-
 const IssueCard = ({issue}) => {
+    // Ensure issue and issue.location are defined before trying to access lat/lng
     const address = useReverseGeocode(issue.location?.lat,issue.location?.lng)
 
 
@@ -34,8 +43,6 @@ const IssueCard = ({issue}) => {
         return 'Just now';
     };
 
-
-
     const formatAddress = (fullAddress) => {
         if (!fullAddress) return null;
         
@@ -55,33 +62,80 @@ const IssueCard = ({issue}) => {
       };
     
       const formattedAddress = formatAddress(address);
+
+      const categoryIcons = {
+        "Road Damage": faRoad,
+        "Lighting": faLightbulb,
+        "Garbage": faTrashAlt,
+        "Parks": faTree,
+        "Water": faWater,
+        "Other": faEllipsisH,
+        "default": faQuestionCircle
+      };
+
+      const statusStyles = {
+        Open: { bg: "bg-red-100", text: "text-red-700", label: "Open" },
+        "In Progress": { bg: "bg-yellow-100", text: "text-yellow-700", label: "In Progress" },
+        Resolved: { bg: "bg-green-100", text: "text-green-700", label: "Resolved" },
+        default: { bg: "bg-gray-100", text: "text-gray-700", label: "Unknown" },
+      };
+
+      // Assuming issue.status exists. Fallback to "Resolved" if not.
+      const currentStatusKey = issue.status && statusStyles[issue.status] ? issue.status : "Resolved";
+      const statusStyle = statusStyles[currentStatusKey];
+
+      const issueCategory = issue.category || "Other";
+      const categoryIcon = categoryIcons[issueCategory] || categoryIcons.default;
+
+      // Assuming issue.updates is an array. Fallback if not.
+      const updatesCount = Array.isArray(issue.updates) ? issue.updates.length : 0;
       
   return (
-    <div>
-      <div className="Recent_Reports_Card h-32 bg-gray-200 mt-2 rounded-[6px] py-4 px-4  ">
-        <div className="flex  justify-between">
-          <div className="Status_button w-[110px] bg-green-300 h-8 rounded-[6px] ">
-            <p className="flex items-center justify-center py-1.5 font-mono text-[13px] text-green-900">
-              Resolved
+    <div className="bg-white mt-3 rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300 ease-in-out">
+        {/* Top Section: Category Icon, Title, Status */}
+        <div className="flex justify-between items-start mb-2">
+            <div className="flex items-center">
+                <FontAwesomeIcon icon={categoryIcon} className={`text-xl mr-3 ${statusStyle.text}`} /> {/* Use status color for icon too, or a neutral one */}
+                <h3 className="text-md font-semibold font-mono text-gray-800 truncate" title={issue.title || issueCategory}>
+                    {issue.title || issueCategory}
+                </h3>
+            </div>
+            <span className={`px-2.5 py-1 text-xs font-mono font-semibold rounded-full ${statusStyle.bg} ${statusStyle.text}`}>
+                {statusStyle.label}
+            </span>
+        </div>
+
+        {/* Description (Optional - if you want to show a snippet) */}
+        {issue.description && (
+            <p className="text-xs text-gray-600 font-mono mb-2 line-clamp-2">
+                {issue.description}
             </p>
+        )}
+
+        {/* Middle Section: Address */}
+        {formattedAddress && (
+            <div className="mb-3">
+                <div className="flex items-center text-xs text-gray-500 font-mono">
+                    <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2" />
+                    <span>{formattedAddress.line1}</span>
+                </div>
+                {formattedAddress.line2 && (
+                    <p className="ml-5 text-xs text-gray-500 font-mono">{formattedAddress.line2}</p>
+                )}
+            </div>
+        )}
+
+        {/* Bottom Section: Updates and Time Ago */}
+        <div className="flex justify-between items-center text-xs text-gray-500 font-mono">
+          <div className="flex items-center">
+            <FontAwesomeIcon icon={faComment} className="mr-1.5" />
+            <span>{updatesCount} Update{updatesCount !== 1 ? 's' : ''}</span>
           </div>
-
-          <p className="text-[13px] font-mono flex">
-                    {formatTimeAgo(issue.createdAt)}
-                </p>
-        </div>
-
-        <div className="font-mono text-[11px] text-gray-600 py-2">
-          <p>{formattedAddress?.line1}</p>
-          <p>{formattedAddress?.line2}</p>
-        </div>
-
-        <div className="flex gap-1.5 items-center py-1">
-          <FontAwesomeIcon icon={faComment} className="text-gray-600" />
-          <p className="font-mono text-[12px]">3 Updates</p>
+          <span>
+            {formatTimeAgo(issue.createdAt)}
+          </span>
         </div>
       </div>
-    </div>
   );
 };
 

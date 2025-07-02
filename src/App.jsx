@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import Navbar from './components/layout/Navbar';
-import { BrowserRouter as Router, Route, Routes,useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes,useLocation, Navigate } from "react-router-dom";
 import IssueForm from './components/issues/IssueForm';
 import { Dashboard } from "./components/Dashboard";
 
@@ -52,6 +52,7 @@ const PageLayout = () => {
     <div>
       {showNavbar && <Navbar />}
       <Routes>
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/report" element={<IssueForm />} />
         <Route path="/issue/:id" element={<IssueDetails />} /> 

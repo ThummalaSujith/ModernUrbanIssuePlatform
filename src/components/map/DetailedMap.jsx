@@ -23,7 +23,7 @@ const DetailedMap = () => {
   return (
     <div>
       <div className="container font-karla">
-        <div className="header flex justify-between items-center mb-4 px-6 mt-4 border-b border-gray-300 shadow-sm h-12">
+        <div className="header flex justify-between items-center px-6 mt-4 border-b border-gray-300 shadow-sm h-12">
           <Link to="/dashboard" className="left_awrow">
             <FontAwesomeIcon icon={faArrowLeft} />
           </Link>

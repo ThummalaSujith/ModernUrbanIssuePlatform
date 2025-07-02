@@ -13,7 +13,6 @@ const CommentForm = ({ postId, onSubmit, currentUser, parentId = null }) => {
     onSubmit({
       postId,
       text,
-
       author: currentUser,
       parentId,
     });

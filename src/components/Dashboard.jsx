@@ -35,7 +35,14 @@ export const Dashboard = () => {
   const [filter, setFilter] = useState("recent");
   const [locationError, setLocationError] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState(null);
+  const authState = useSelector((state) => state.auth); // Get the whole auth state
+  
+  // Get the current user's name from Redux state
+  // Adjust 'state.auth.user.name' if your Redux state structure is different
+  const userName = useSelector((state) => state.auth?.user?.name || state.auth?.user?.username || "User");
   console.log("issues:", issues);
+  console.log("Current Auth State in Dashboard:", authState); // Log the auth state
+  console.log("Derived userName:", userName); // Log the derived userName
 
   useEffect(() => {
     dispatch(getIssues());
@@ -144,7 +151,7 @@ export const Dashboard = () => {
         </div>
 
         <div className="content mt-6 px-4">
-          <h1 className="font-bold text-2xl font-mono">Welcome back, Sarah!</h1>
+          <h1 className="font-bold text-2xl font-mono">Welcome back, {userName}!</h1>
           <p className="text-gray-700 font-mono text-[14px] py-1.5 ">
             Help make our city better
           </p>
