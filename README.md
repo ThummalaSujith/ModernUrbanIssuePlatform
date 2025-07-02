@@ -89,7 +89,7 @@ Urban Eye is divided into three serverless tiers:
 1. Sign in via AWS Cognito
 2. Browse existing issues on the dashboard
 3. Click “Report New Issue”
-   - Upload an image
+   - Upload an images
    - Choose a category
    - Add a description
 4. Image is validated using **Rekognition**
